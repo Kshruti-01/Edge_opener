@@ -126,3 +126,52 @@ if __name__ == "__main__":
         sys.exit(1)
     
     main()
+
+
+--- Iteration 1 ---
+Opening Microsoft Edge...
+Microsoft Edge opened successfully
+Closing Microsoft Edge.
+Error closing process 8752: (pid=8752, name='MicrosoftEdgeUpdate.exe')
+Error closing process 15472: process no longer exists (pid=15472, name='msedgewebview2.exe')
+Error closing process 15728: process no longer exists (pid=15728, name='msedgewebview2.exe')
+Error closing process 16004: process no longer exists (pid=16004, name='msedgewebview2.exe')
+Error closing process 16456: process no longer exists (pid=16456, name='msedgewebview2.exe')
+Error closing process 17368: process no longer exists (pid=17368, name='msedgewebview2.exe')
+Error closing process 18164: process no longer exists (pid=18164, name='msedgewebview2.exe')
+Error closing process 19116: process no longer exists (pid=19116, name='msedgewebview2.exe')
+Error closing process 20360: process no longer exists (pid=20360, name='msedgewebview2.exe')
+Error closing process 21540: process no longer exists (pid=21540, name='msedgewebview2.exe')
+Error closing process 22200: process no longer exists (pid=22200, name='msedgewebview2.exe')
+Error closing process 22660: process no longer exists (pid=22660, name='msedgewebview2.exe')
+Error closing process 23432: process no longer exists (pid=23432, name='msedgewebview2.exe')
+Error closing process 23520: process no longer exists (pid=23520, name='msedgewebview2.exe')
+Error closing process 24196: process no longer exists (pid=24196, name='msedgewebview2.exe')
+Error closing process 24320: process no longer exists (pid=24320, name='msedgewebview2.exe')
+Error closing process 26188: process no longer exists (pid=26188, name='msedgewebview2.exe')
+Error closing process 27524: process no longer exists (pid=27524, name='msedgewebview2.exe')
+ Microsoft Edge closed successfully
+
+--- Iteration 2 ---
+Opening Microsoft Edge...
+Microsoft Edge opened successfully
+Closing Microsoft Edge.
+Error closing process 2352: process no longer exists and its PID has been reused (pid=2352, name='msedgewebview2.exe')
+Error closing process 8752: (pid=8752, name='MicrosoftEdgeUpdate.exe')
+Error closing process 8952: process no longer exists (pid=8952, name='msedgewebview2.exe')
+Error closing process 12696: process no longer exists (pid=12696, name='msedge.exe')
+Error closing process 14100: process no longer exists (pid=14100, name='msedgewebview2.exe')
+Error closing process 15908: process no longer exists (pid=15908, name='msedge.exe')
+Error closing process 17440: process no longer exists (pid=17440, name='msedgewebview2.exe')
+xe')
+Error closing process 26916: process no longer exists (pid=26916, name='msedgewebview2.exe')
+Error closing process 28372: process no longer exists (pid=28372, name='msedgewebview2.exe')
+Error closing process 28532: process no longer exists (pid=28532, name='msedgewebview2.exe')
+Error closing process 28580: process no longer exists (pid=28580, name='msedgewebview2.exe')
+ Microsoft Edge closed successfully
+
+--- Iteration 3 ---
+Opening Microsoft Edge...
+Microsoft Edge opened successfully
+Closing Microsoft Edge.
+Error closing process 8752: (pid=8752, name='MicrosoftEdgeUpdate.exe')
