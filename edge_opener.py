@@ -4,69 +4,70 @@ import psutil
 import sys
 import os
 
-def find_edge_processes():
-    """Find all Microsoft Edge processes"""
-    edge_processes = []
-    edge_names = ['msedge.exe', 'microsoftedge', 'Microsoft Edge', 'edge']
-    
-    for proc in psutil.process_iter(['name', 'pid']):
-        try:
-            proc_name = proc.info['name'].lower() if proc.info['name'] else ''
-            if any(edge_name in proc_name for edge_name in edge_names):
-                edge_processes.append(proc)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
-    return edge_processes
-
 def open_edge():
-    """Open Microsoft Edge based on the operating system"""
+    """Open Microsoft Edge"""
     try:
-        if sys.platform == "win32":  # Windows
-            edge_paths = [
-                r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-                r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
-                "msedge"  # Try from PATH
-            ]
-            
-            for path in edge_paths:
-                try:
-                    subprocess.Popen([path], shell=True)
-                    return True
-                except:
-                    continue
-            return False
-            
-        elif sys.platform == "darwin":  # macOS
+        if sys.platform == "win32":
+            subprocess.Popen(["msedge"], shell=True)
+        elif sys.platform == "darwin":
             subprocess.Popen(["open", "-a", "Microsoft Edge"])
-            return True
-            
-        elif sys.platform == "linux":  # Linux
-            subprocess.Popen(["microsoft-edge", "microsoft-edge-stable", "edge"], 
-                           shell=True)
-            return True
-        else:
-            print(f"Unsupported operating system: {sys.platform}")
-            return False
-            
+        elif sys.platform == "linux":
+            subprocess.Popen(["microsoft-edge-stable"])
+        return True
     except Exception as e:
         print(f"Error opening Edge: {e}")
         return False
 
+def find_main_edge_processes():
+    """Find ONLY the main Microsoft Edge browser processes"""
+    edge_processes = []
+    
+    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+        try:
+            proc_name = proc.info['name'].lower() if proc.info['name'] else ''
+            cmdline = ' '.join(proc.info['cmdline']).lower() if proc.info['cmdline'] else ''
+            
+            # Only target main Edge browser processes
+            if proc_name == 'msedge.exe':
+                # Exclude updater and other helper processes
+                is_updater = 'update' in cmdline or 'MicrosoftEdgeUpdate' in proc_name
+                is_webview2 = 'webview2' in cmdline or 'webview' in proc_name
+                is_crashpad = 'crashpad' in cmdline
+                
+                # Only kill actual browser windows
+                if not is_updater and not is_webview2 and not is_crashpad:
+                    edge_processes.append(proc)
+                    
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+            
+    return edge_processes
+
 def close_edge():
-    """Close all Microsoft Edge processes"""
+    """Close only main Edge browser windows"""
     try:
+        processes = find_main_edge_processes()
+        
+        if not processes:
+            print(" No main Edge browser processes found")
+            return False
+        
         edges_closed = 0
-        for proc in find_edge_processes():
+        for proc in processes:
             try:
-                proc.terminate()  # Graceful termination
-                proc.wait(timeout=3)  # Wait for process to end
+                # Try graceful close first
+                proc.terminate()
+                proc.wait(timeout=2)
+                print(f"Closed Edge process (PID: {proc.pid})")
                 edges_closed += 1
             except psutil.TimeoutExpired:
-                proc.kill()  # Force kill if not responding
+                # Force kill if not responding
+                proc.kill()
+                print(f"Force killed Edge process (PID: {proc.pid})")
                 edges_closed += 1
             except Exception as e:
-                print(f"Error closing process {proc.pid}: {e}")
-        
+                print(f"Error: {e}")
+                
         return edges_closed > 0
         
     except Exception as e:
@@ -74,104 +75,70 @@ def close_edge():
         return False
 
 def main():
-    """Main function to open and close Edge infinitely"""
-    print("WARNING: This script will open and close Microsoft Edge in an infinite loop!")
-    print("Press Ctrl+C to stop the script.\n")
+    print("="*50)
+    print("MICROSOFT EDGE OPENER/CLOSER")
+    print("="*50)
+    print("This will open and close Edge browser windows")
+    print("Press Ctrl+C to stop\n")
+    
+    # Safety: Ask for confirmation
+    try:
+        confirm = input("How many cycles? (enter number or 'inf' for infinite): ")
+        if confirm.lower() == 'inf':
+            max_iterations = float('inf')
+            print("Running infinitely until Ctrl+C...\n")
+        else:
+            max_iterations = int(confirm)
+            print(f"Running {max_iterations} cycles...\n")
+    except ValueError:
+        print("Invalid input. Exiting.")
+        return
     
     iteration = 0
     
     try:
-        while True:
+        while iteration < max_iterations:
             iteration += 1
-            print(f"\n--- Iteration {iteration} ---")
+            print(f"\n{'='*30}")
+            print(f"CYCLE {iteration}")
+            print(f"{'='*30}")
             
-            # Open Microsoft Edge
-            print("Opening Microsoft Edge...")
+            # Open Edge
+            print("Opening Edge.")
             if open_edge():
-                print("✓ Microsoft Edge opened successfully")
+                print("Edge opened successfully")
             else:
-                print("✗ Failed to open Microsoft Edge")
-                print("Make sure Microsoft Edge is installed on your system")
+                print("Failed to open Edge")
                 break
             
-            # Wait a moment for Edge to fully open
-            time.sleep(1)
+            # Wait for Edge to fully open
+            time.sleep(2)
             
-            # Close Microsoft Edge
-            print("Closing Microsoft Edge.")
+            # Close Edge
+            print("Closing Edge.")
             if close_edge():
-                print(" Microsoft Edge closed successfully")
+                print("Edge closed successfully")
             else:
-                print("No Microsoft Edge processes found to close")
+                print("No Edge windows to close")
             
-            # Short pause before next iteration
-            time.sleep(0.5)
-            
+            # Pause between cycles
+            if iteration < max_iterations:
+                time.sleep(1)
+                
     except KeyboardInterrupt:
-        print("\n\n Script stopped by user.")
-        print(f"Total iterations completed: {iteration}")
+        print(f"\n\nSTOPPED by user after {iteration} cycles")
         
-        # Clean up any remaining Edge processes
-        print("Cleaning up remaining Edge processes...")
+    finally:
+        # Final cleanup
+        print("\nCleaning up")
         close_edge()
         print("Done!")
 
 if __name__ == "__main__":
-    # Check if psutil is installed
     try:
         import psutil
     except ImportError:
-        print("Error: 'psutil' module is required but not installed.")
-        print("Please install it using: pip install psutil")
+        print("'psutil' not installed. Install with: pip install psutil")
         sys.exit(1)
     
     main()
-
-
---- Iteration 1 ---
-Opening Microsoft Edge...
-Microsoft Edge opened successfully
-Closing Microsoft Edge.
-Error closing process 8752: (pid=8752, name='MicrosoftEdgeUpdate.exe')
-Error closing process 15472: process no longer exists (pid=15472, name='msedgewebview2.exe')
-Error closing process 15728: process no longer exists (pid=15728, name='msedgewebview2.exe')
-Error closing process 16004: process no longer exists (pid=16004, name='msedgewebview2.exe')
-Error closing process 16456: process no longer exists (pid=16456, name='msedgewebview2.exe')
-Error closing process 17368: process no longer exists (pid=17368, name='msedgewebview2.exe')
-Error closing process 18164: process no longer exists (pid=18164, name='msedgewebview2.exe')
-Error closing process 19116: process no longer exists (pid=19116, name='msedgewebview2.exe')
-Error closing process 20360: process no longer exists (pid=20360, name='msedgewebview2.exe')
-Error closing process 21540: process no longer exists (pid=21540, name='msedgewebview2.exe')
-Error closing process 22200: process no longer exists (pid=22200, name='msedgewebview2.exe')
-Error closing process 22660: process no longer exists (pid=22660, name='msedgewebview2.exe')
-Error closing process 23432: process no longer exists (pid=23432, name='msedgewebview2.exe')
-Error closing process 23520: process no longer exists (pid=23520, name='msedgewebview2.exe')
-Error closing process 24196: process no longer exists (pid=24196, name='msedgewebview2.exe')
-Error closing process 24320: process no longer exists (pid=24320, name='msedgewebview2.exe')
-Error closing process 26188: process no longer exists (pid=26188, name='msedgewebview2.exe')
-Error closing process 27524: process no longer exists (pid=27524, name='msedgewebview2.exe')
- Microsoft Edge closed successfully
-
---- Iteration 2 ---
-Opening Microsoft Edge...
-Microsoft Edge opened successfully
-Closing Microsoft Edge.
-Error closing process 2352: process no longer exists and its PID has been reused (pid=2352, name='msedgewebview2.exe')
-Error closing process 8752: (pid=8752, name='MicrosoftEdgeUpdate.exe')
-Error closing process 8952: process no longer exists (pid=8952, name='msedgewebview2.exe')
-Error closing process 12696: process no longer exists (pid=12696, name='msedge.exe')
-Error closing process 14100: process no longer exists (pid=14100, name='msedgewebview2.exe')
-Error closing process 15908: process no longer exists (pid=15908, name='msedge.exe')
-Error closing process 17440: process no longer exists (pid=17440, name='msedgewebview2.exe')
-xe')
-Error closing process 26916: process no longer exists (pid=26916, name='msedgewebview2.exe')
-Error closing process 28372: process no longer exists (pid=28372, name='msedgewebview2.exe')
-Error closing process 28532: process no longer exists (pid=28532, name='msedgewebview2.exe')
-Error closing process 28580: process no longer exists (pid=28580, name='msedgewebview2.exe')
- Microsoft Edge closed successfully
-
---- Iteration 3 ---
-Opening Microsoft Edge...
-Microsoft Edge opened successfully
-Closing Microsoft Edge.
-Error closing process 8752: (pid=8752, name='MicrosoftEdgeUpdate.exe')
