@@ -142,3 +142,133 @@ if __name__ == "__main__":
         sys.exit(1)
     
     main()
+
+
+PS C:\Users\850085869\OneDrive - Genpact\Desktop\Project\edge_opener> python test_edge.py
+==================================================
+MICROSOFT EDGE OPENER/CLOSER
+==================================================
+This will open and close Edge browser windows
+Press Ctrl+C to stop
+
+How many cycles? (enter number or 'inf' for infinite): 10
+Running 10 cycles...
+
+
+==============================
+CYCLE 1
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+Closed Edge process (PID: 15196)
+Closed Edge process (PID: 16224)
+Closed Edge process (PID: 16572)
+Error: process no longer exists (pid=20700, name='msedge.exe')
+Error: process no longer exists (pid=23828, name='msedge.exe')
+Edge closed successfully
+
+==============================
+CYCLE 2
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 3
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 4
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 5
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 6
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 7
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 8
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 9
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+==============================
+CYCLE 10
+==============================
+Opening Edge.
+Edge opened successfully
+'msedge' is not recognized as an internal or external command,
+operable program or batch file.
+Closing Edge.
+ No main Edge browser processes found
+No Edge windows to close
+
+Cleaning up
+ No main Edge browser processes found
+Done!
